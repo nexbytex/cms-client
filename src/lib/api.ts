@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { CreateUserPayload, UpdateUserPayload, UserRecord } from '../types';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
@@ -26,3 +27,22 @@ api.interceptors.response.use(
 );
 
 export default api;
+
+
+// User API
+export const usersApi = {
+  getAll: (role?: string) =>
+    api.get<{ users: UserRecord[] }>("/users", { params: role ? { role } : {} }),
+
+  getById: (id: string) =>
+    api.get<{ user: UserRecord }>(`/users/${id}`),
+
+  create: (data: CreateUserPayload) =>
+    api.post<{ user: UserRecord }>("/users", data),
+
+  update: (id: string, data: UpdateUserPayload) =>
+    api.put<{ user: UserRecord }>(`/users/${id}`, data),
+
+  delete: (id: string) =>
+    api.delete(`/users/${id}`),
+};

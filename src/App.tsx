@@ -7,6 +7,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import StudentDashboard from './pages/student/StudentDashboard';
 import NotFound from './pages/NotFound';
+import UsersPage from './pages/admin/UsersPage';
 
 const queryClient = new QueryClient();
 
@@ -27,7 +28,9 @@ export default function App() {
                   <AdminDashboard />
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route path="users" element={<UsersPage />} />  {/* ✅ relative path, no /admin prefix */}
+            </Route>
 
             {/* Teacher routes */}
             <Route
