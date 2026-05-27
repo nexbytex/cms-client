@@ -13,11 +13,16 @@ interface Props {
 
 export default function DeleteUserDialog({ user, onClose }: Props) {
   const deleteUser = useDeleteUser();
+  const error = deleteUser.error as any;
 
   const handleDelete = async () => {
     if (!user) return;
-    await deleteUser.mutateAsync(user.id);
-    onClose();
+    try {
+      await deleteUser.mutateAsync(user.id);
+      onClose();
+    } catch {
+      // keep dialog open; error is rendered below
+    }
   };
 
   return (
@@ -30,6 +35,13 @@ export default function DeleteUserDialog({ user, onClose }: Props) {
             <strong>{user?.email}</strong>. This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
+
+        {error && (
+          <p className="text-sm text-destructive">
+            {error?.response?.data?.message || "Failed to delete user."}
+          </p>
+        )}
+
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
